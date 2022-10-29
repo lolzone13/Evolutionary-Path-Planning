@@ -76,6 +76,14 @@ class Population:
             self.population.append(Individual(num_possible_moves))
 
 
+    def average_fitness(self):
+        total_fitness = 0
+        for individual in self.population:
+            total_fitness+=individual.fitness
+        avg_fitness = total_fitness / len(self.population)
+
+        return avg_fitness 
+
 class Genetic_Algorithm:
     def __init__(self, population_size, iterations=10):
         self.population_size = population_size
@@ -108,7 +116,6 @@ class Genetic_Algorithm:
 
         return (child1, child2)
 
-    # def adaptive_mutation():
 
     def mutation(self, mutation_probability, individual):
         p = random.random()
@@ -118,3 +125,14 @@ class Genetic_Algorithm:
             individual.moves[index] = random.choice('LURD')
         
         return individual
+
+        
+    def adaptive_mutation(self, population, individual, low_mut_prob, high_mut_prob):
+        avg_fitness = population.average_fitness()
+
+        mutation_probability = high_mut_prob if individual.fitness < avg_fitness else low_mut_prob
+
+        return self.mutation(mutation_probability, individual)
+
+
+
