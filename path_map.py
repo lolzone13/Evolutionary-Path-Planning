@@ -1,4 +1,4 @@
-# 'DDDDDRRU'
+# DDDDDRRUUR
 
 class Path_Map:
     def __init__(self):
@@ -20,3 +20,5 @@ class Path_Map:
 
         self.rows = 10
         self.columns = 10
+    def generate_map(self):
+        return []
