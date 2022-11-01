@@ -17,8 +17,7 @@ Comments
 
 
 class Genetic_Algorithm:
-    def __init__(self, population_size, iterations=10):
-        self.population_size = population_size
+    def __init__(self, iterations=100):
         self.iterations = iterations
 
     def roulette_selection(self, fitness_values):
@@ -28,11 +27,16 @@ class Genetic_Algorithm:
                          for v in fitness_values]
 
         selection_weights = []
-        accumulated_sum = 0
 
-        for p in probabilities:
-            accumulated_sum += p
-            selection_weights.append(accumulated_sum)
+        
+        # accumulated_sum = 0
+        # print(probabilities, sum(probabilities))
+        # for p in probabilities:
+        #     accumulated_sum += p
+        #     selection_weights.append(accumulated_sum)
+        # print(selection_weights)
+
+        selection_weights = probabilities
 
         # spin roulette wheel and generate solution
         p = random.randint(0, selection_weights[-1])
@@ -69,36 +73,37 @@ class Genetic_Algorithm:
 
 
     def core_function(self):
-        population = Population(10, 10).get_population()
-
+        population_object = Population(10, 10)
+        population = population_object.get_population()
         # selection, crossover, mutation
         next_generation = []
         for generation in range(self.iterations):
 
-            fitness_values = population.get_fitnesses()
+            fitness_values = population_object.get_fitnesses()
             
-            for _ in range(population.population_size // 2):
-                first_parent = self.roulette_selection(fitness_values)
-                second_parent = self.roulette_selection(fitness_values)
+            for _ in range(population_object.population_size // 2):
+                first_parent = population[self.roulette_selection(fitness_values)]
+                second_parent = population[self.roulette_selection(fitness_values)]
 
                 (first_child, second_child) = self.crossover(first_parent, second_parent)
 
-                first_child = self.adaptive_mutation(population, first_child, 0.4, 0.8)
-                second_child = self.adaptive_mutation(population, second_child, 0.4, 0.8)
+                first_child = self.adaptive_mutation(population_object, first_child, 0.4, 0.8)
+                second_child = self.adaptive_mutation(population_object, second_child, 0.4, 0.8)
 
 
                 next_generation.append(first_child)
                 next_generation.append(second_child)
 
 
-            population.population = next_generation
+            population_object.population = next_generation
             next_generation = []
 
         print("Final Population")
-        print(population.population)
+        print(population_object.population)
 
         print("best individual: ", end="")
-        print(population.get_best_individual())
+        best_individual = population_object.get_best_individual()
+        print(best_individual.moves, best_individual.fitness)
 
 
 
