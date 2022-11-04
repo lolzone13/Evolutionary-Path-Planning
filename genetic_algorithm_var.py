@@ -16,14 +16,15 @@ Comments
 
 
 
-class Genetic_Algorithm:
-    def __init__(self, population_size, num_possible_moves, iterations=1000):
+class Genetic_Algorithm_Var:
+
+    def __init__(self, population_size, num_possible_moves, iterations=10):
         self.iterations = iterations
         self.num_possible_moves = num_possible_moves
         self.population_size = population_size
 
     def roulette_selection(self, fitness_values):
-        total_fitness = sum(fitness_values)
+        total_fitness = sum(fitness_values) + 1
         # minimum_fitness = min(fitness_values)
         probabilities = [math.ceil((v/total_fitness) * 100)
                          for v in fitness_values]
@@ -47,7 +48,7 @@ class Genetic_Algorithm:
                 return i
 
     def crossover(self, parent1, parent2):
-        num = random.randint(0, parent1.num_moves-1)
+        num = random.randint(0, min(parent1.num_moves, parent2.num_moves)-1)
         child1 = Individual(parent1.num_moves,
                             parent1.moves[0:num] + parent2.moves[num:])
         child2 = Individual(parent2.num_moves,
@@ -60,8 +61,25 @@ class Genetic_Algorithm:
         p = random.random()
 
         if (p < mutation_probability):
-            index = random.randint(0,individual.num_moves-1)
-            individual.moves[index] = random.choice(individual.possible_moves)
+            add_prob = random.random()
+
+            if add_prob < 0.5:
+
+                r = random.random()
+
+                if r < 0.5 and course_map.max_path_length > individual.num_moves:
+                    individual.append_move(random.choice(individual.possible_moves))  
+
+                elif r > 0.5 and course_map.min_path_length < individual.num_moves:
+                    individual.delete_move(random.randint(0,individual.num_moves-1))
+
+                else:
+                    index = random.randint(0,individual.num_moves-1)
+                    individual.moves[index] = random.choice(individual.possible_moves)
+
+            else:
+                index = random.randint(0,individual.num_moves-1)
+                individual.moves[index] = random.choice(individual.possible_moves)
         
         return individual
 
@@ -81,7 +99,7 @@ class Genetic_Algorithm:
         next_generation = []
         for generation in range(self.iterations):
 
-            fitness_values = population_object.get_fitnesses()
+            fitness_values = population_object.get_adjusted_fitnesses()
             
             for _ in range(population_object.population_size // 2):
                 first_parent = population[self.roulette_selection(fitness_values)]
@@ -89,8 +107,8 @@ class Genetic_Algorithm:
 
                 (first_child, second_child) = self.crossover(first_parent, second_parent)
 
-                first_child = self.adaptive_mutation(population_object, first_child, 0.4, 0.8)
-                second_child = self.adaptive_mutation(population_object, second_child, 0.4, 0.8)
+                first_child = self.adaptive_mutation(population_object, first_child, 0.4, 0.9)
+                second_child = self.adaptive_mutation(population_object, second_child, 0.4, 0.9)
 
 
                 next_generation.append(first_child)
@@ -105,7 +123,7 @@ class Genetic_Algorithm:
 
         print("best individual: ", end="")
         best_individual = population_object.get_best_individual()
-        print(best_individual.moves, best_individual.fitness)
+        print(best_individual.moves, best_individual.num_moves, best_individual.fitness)
         return best_individual.moves
 
 

@@ -1,16 +1,17 @@
 import pytest
-
+from devtools import debug
 from path_map import Path_Map
 from population import Individual
+from genetic_algorithm_var import Genetic_Algorithm_Var
 from genetic_algorithm import Genetic_Algorithm
+from visualizations import visualize_map
 
-
-ind = Individual(10, 'DDDDDRRUUR')
-ga = Genetic_Algorithm()
+ind = Individual(10)
+ga = Genetic_Algorithm_Var(10,10, 100)
 
 
 p = [3, 4, 2, 1, 7, 9]
 # print(ga.roulette_selection(p))
-ga.core_function()
-
+path_string = ga.core_function()
+visualize_map(path_string)
 # print(ind.fitness)

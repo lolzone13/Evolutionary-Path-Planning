@@ -1,7 +1,8 @@
 # DDDDDRRUUR
+import random
 
 class Path_Map:
-    def __init__(self):
+    def __init__(self, rows=10, cols=10):
         self.map = [
             [0, 0, 0, 0, 0, 0, 0, 8, 8, 0, ],
             [0, 4, 4, 0, 0, 0, 0, 0, 0, 0, ],
@@ -17,8 +18,19 @@ class Path_Map:
 
         self.start = [0, 0]
         self.end = [3, 3]
-
-        self.rows = 10
-        self.columns = 10
+        self.min_path_length = abs(self.start[0] - self.end[0]) + abs(self.start[1] - self.end[1])
+        self.rows = rows
+        self.columns = cols
+        self.max_path_length = rows * cols
     def generate_map(self):
+        return self.map
+    
+
+    def create_map(self):
+        self.map = []
+        for i in range(self.rows):
+            l = []
+            for j in range(self.cols):
+                l.append(random.randint(0,10))
+            self.map.append(l)
         return self.map
