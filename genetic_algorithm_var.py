@@ -4,7 +4,7 @@ from path_map import Path_Map
 
 course_map = Path_Map()
 
-from population import Individual, Population
+from new_population import Individual, Population
 
 '''
 Comments
@@ -25,8 +25,9 @@ class Genetic_Algorithm_Var:
 
     def roulette_selection(self, fitness_values):
         total_fitness = sum(fitness_values) + 1
-        # minimum_fitness = min(fitness_values)
-        probabilities = [math.ceil((v/total_fitness) * 100)
+        num_fitness = len(fitness_values)
+        minimum_fitness = min(fitness_values)
+        probabilities = [math.ceil(((v-minimum_fitness)/(total_fitness - num_fitness*minimum_fitness)) * 100)
                          for v in fitness_values]
 
         selection_weights = []

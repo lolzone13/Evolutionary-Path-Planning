@@ -22,8 +22,10 @@ def visualize_map(path_string):
             x-=1
         elif (i == 'D'):
             y+=1
-
-        ll[x][y] = '#'
+        if ([x, y] == map.end):
+            ll[x][y] = 't'
+            break
+        ll[y][x] = '#'
     
 
     for row in ll:
