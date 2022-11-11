@@ -98,14 +98,14 @@ class Individual:
                             (relu(height-course_map.map[x-1][y])))**2 + ((tx-x+1))**2+((ty-y))**2
                 x = x - 1
             if x == tx and y == ty:  # award the individual that gets to the final point
-                f = 1000
+                f += 1000
     
        
                 # experimental stuff
                 self.fitness = f
                 height = course_map.map[x][y]
 
-                return f
+          
                 
             
             x = x%(self.max_row + 1)
