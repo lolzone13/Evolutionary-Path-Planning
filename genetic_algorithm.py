@@ -1,6 +1,7 @@
 import random
 import math
 from path_map import Path_Map
+from devtools import debug
 
 course_map = Path_Map()
 
@@ -24,6 +25,7 @@ class Genetic_Algorithm:
 
     def roulette_selection(self, fitness_values):
         total_fitness = sum(fitness_values)
+  
         # minimum_fitness = min(fitness_values)
         num_fitness = len(fitness_values)
         minimum_fitness = min(fitness_values)
@@ -39,23 +41,33 @@ class Genetic_Algorithm:
         #     accumulated_sum += p
         #     selection_weights.append(accumulated_sum)
         # print(selection_weights)
-
+        
         selection_weights = probabilities
-
+        if (sum(selection_weights) == 0):
+            selection_weights[0] = 1
+        return random.choices([i for i in range(0,len(fitness_values))], weights=selection_weights, k=1)[0]
+        
         # spin roulette wheel and generate solution
-        p = random.randint(0, selection_weights[-1])
-        for i in range(len(selection_weights)):
-            if (selection_weights[i] >= p):
-                return i
+        # p = random.randint(0, max(probabilities))
+        # for i in range(len(selection_weights)):
+        #     if (selection_weights[i] >= p):
+        #         return i
 
     def crossover(self, parent1, parent2):
         num = random.randint(0, parent1.num_moves-1)
+        # debug("Parent Moves", parent1.moves, parent2.moves)
+        # l1 = parent1.moves[0:num] + parent2.moves[num:]
+        # l2 = parent2.moves[0:num] + parent1.moves[num:]
+
+        # debug("Parents moves exchanged: ",l1, l2)
         child1 = Individual(parent1.num_moves,
                             parent1.moves[0:num] + parent2.moves[num:])
         child2 = Individual(parent2.num_moves,
                             parent2.moves[0:num] + parent1.moves[num:])
         child1.fitness = child1.fitness_function()
         child2.fitness = child1.fitness_function()
+
+        
         return (child1, child2)
 
 
@@ -88,17 +100,18 @@ class Genetic_Algorithm:
         for generation in range(self.iterations):
 
             fitness_values = population_object.get_fitnesses()
-            # print(fitness_values)
+            # debug(fitness_values)
             for _ in range(population_object.population_size // 2):
                 first_parent = population[self.roulette_selection(fitness_values)]
                 second_parent = population[self.roulette_selection(fitness_values)]
-
+        
                 (first_child, second_child) = self.crossover(first_parent, second_parent)
-                
+                # debug("Children fitness", first_child.fitness, second_child.fitness)
+                # debug("Children moves ", first_child.moves, second_child.moves)
                 first_child = self.adaptive_mutation(population_object, first_child, 0.8, 0.8)
                 second_child = self.adaptive_mutation(population_object, second_child, 0.8, 0.8)
-                print(first_child.fitness, second_child.fitness)
-                
+
+
                 next_generation.append(first_child)
                 next_generation.append(second_child)
 
@@ -121,7 +134,7 @@ class Genetic_Algorithm:
             next_generation = []
 
         print("Final Population")
-        print(population_object.population)
+        population_object.print_population()
 
         print("best individual: ", end="")
         best_individual = population_object.get_best_individual()

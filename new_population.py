@@ -1,7 +1,7 @@
 # Objective function for minimization
 
 import random
-import math
+from devtools import debug
 
 from path_map import Path_Map
 
@@ -17,8 +17,8 @@ class Individual:
         self.num_moves = len(moves)
         self.robot_height = robot_height
         self.num = num_possible_moves
-        self.max_row = course_map.rows
-        self.max_column = course_map.columns
+        self.max_row = course_map.rows-1
+        self.max_column = course_map.columns-1
 
         # if (self.num_moves == 0):
         #     # generate random moves
@@ -42,6 +42,7 @@ class Individual:
         x, y = course_map.start
         tx, ty = course_map.end
         height = course_map.map[x][y]
+
         for m in range(self.num_moves):
             # print(m, [x, y], end=" ")
             if (self.moves[m] == 'L'):
@@ -49,66 +50,72 @@ class Individual:
                     f = f + self.num * \
                         (relu(course_map.map[x][y-1] - height)) + \
                         ((tx-x))**2+ ((ty-y+1))**2
-                    y = y - 1
+                    
                 elif y == 0:
                     f = hard_pen1
                 elif height + self.robot_height <= course_map.map[x][y-1]:
                     f = hard_pen2 * \
                         (
                             (relu(height-course_map.map[x][y-1])))**2 + ((tx-x))**2+((ty-y+1))**2
-
+                y = y - 1
             elif (self.moves[m] == 'D'):
+                if x < self.max_row and height + self.robot_height >= course_map.map[x+1][y]:
+                    f = f + self.num * \
+                        (relu(course_map.map[x+1][y] - height)) + \
+                        ((tx-x-1)**2)+((ty-y)**2)
+                    
+                elif x == self.max_row:
+                    f = hard_pen1
+                elif height + self.robot_height <= course_map.map[x+1][y]:
+                    f = hard_pen2 * \
+                        (
+                            (relu(height-course_map.map[x+1][y])))**2 + ((tx-x-1))**2+((ty-y))**2
+                x = x + 1
+            elif (self.moves[m] == 'R'):
+                if y < self.max_column and height + self.robot_height >= course_map.map[x][y+1]:
+                    f = f + self.num * \
+                        (relu(course_map.map[x][y+1] - height)) + \
+                        ((tx-x)**2)+((ty-y-1)**2)
+                    
+                elif y == self.max_column:
+                    f = hard_pen1
+                elif height + self.robot_height <= course_map.map[x][y+1]:
+                    f = hard_pen2 * \
+                        (
+                            (relu(height-course_map.map[x][y+1])))**2 + ((tx-x))**2+((ty-y-1))**2
+                y = y + 1
+            elif (self.moves[m] == 'U'):
                 if x > 0 and height + self.robot_height >= course_map.map[x-1][y]:
                     f = f + self.num * \
                         (relu(course_map.map[x-1][y] - height)) + \
-                        ((tx-x+1)**2)+((ty-y)**2)
-                    x = x - 1
+                        ((tx-x+1))**2+((ty-y))**2
+                    
                 elif x == 0:
                     f = hard_pen1
                 elif height + self.robot_height <= course_map.map[x-1][y]:
                     f = hard_pen2 * \
                         (
                             (relu(height-course_map.map[x-1][y])))**2 + ((tx-x+1))**2+((ty-y))**2
-
-            elif (self.moves[m] == 'R'):
-                if y < self.max_column and height + self.robot_height >= course_map.map[x][y+1]:
-                    f = f + self.num * \
-                        (relu(course_map.map[x][y+1] - height)) + \
-                        ((tx-x)**2)+((ty-y-1)**2)
-                    y = y + 1
-                elif y > self.max_column:
-                    f = hard_pen1
-                elif height + self.robot_height <= course_map.map[x][y+1]:
-                    f = hard_pen2 * \
-                        (
-                            (relu(height-course_map.map[x][y+1])))**2 + ((tx-x))**2+((ty-y-1))**2
-
-            elif (self.moves[m] == 'U'):
-                if y < self.max_row and height + self.robot_height >= course_map.map[x-1][y]:
-                    f = f + self.num * \
-                        (relu(course_map.map[x-1][y] - height)) + \
-                        ((tx-x+1))**2+((ty-y))**2
-                    x = x + 1
-                elif y == self.max_row:
-                    f = hard_pen1
-                elif height + self.robot_height <= course_map.map[x-1][y]:
-                    f = hard_pen2 * \
-                        (
-                            (relu(height-course_map.map[x-1][y])))**2 + ((tx-x+1))**2+((ty-y))**2
-
+                x = x - 1
             if x == tx and y == ty:  # award the individual that gets to the final point
                 f = 1000
-
+    
+       
                 # experimental stuff
                 self.fitness = f
                 height = course_map.map[x][y]
 
-                
                 return f
+                
+            
+            x = x%(self.max_row + 1)
+            y = y%(self.max_column + 1)
             height = course_map.map[x][y]
+
+            
             # print(f)
         self.fitness = f
-        print(self.moves, self.fitness)
+        # debug(self.moves, self.fitness)
         return f
 
     def append_move(self, move):
@@ -131,12 +138,12 @@ class Population:
 
             for _ in range(num_possible_moves):
                 new_moves.append(random.choice(['U', 'L', 'R', 'D']))
-                print(new_moves, _)
+                # debug(new_moves, _)
             
             self.population.append(Individual(num_possible_moves, moves=new_moves))
        
 
-        print("Population: {}".format(num_possible_moves))
+        debug("Population: {}".format(num_possible_moves))
         self.print_population()
 
     def average_fitness(self):
@@ -163,8 +170,8 @@ class Population:
         fitnesses = []
 
         for i in self.population:
-            
-            fitnesses.append(i.fitness)
+
+            fitnesses.append(i.fitness_function())
 
         return fitnesses
 
