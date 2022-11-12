@@ -16,8 +16,8 @@ path_string = ga.core_function()
 
 
 map = Path_Map()
-
-
+course = map.generate_map()
+robot_height = 4
 
 pygame.init()
 screen = pygame.display.set_mode((700, 600))
@@ -44,8 +44,8 @@ object1.fill(dark_grey)
 pygame.draw.circle(object1, red, (25, 25), 25)
 
 # start and end, start - green, end - orange
-end = map.end
-start = map.start
+end = map.end[1], map.end[0]
+start = map.start[1], map.start[0]
 pygame.draw.circle(board, green, (start[0]*55 + 25,start[1]*55 + 25), 25)
 pygame.draw.circle(board, orange, (end[0]*55 + 25,end[1]*55 + 25), 25)
 # pygame.draw.circle(object1, green, (start[0]*55 + 25,start[1]*55 + 25), 25)
@@ -67,8 +67,10 @@ def add_numbers():
     for i in range(len(mp)):
         for j in range(len(mp[0])):
             ft = font.render(str(mp[i][j]), True, blue)
-            screen.blit(ft, (105 + i*55, 20 + j*55))
+            screen.blit(ft, (105 + j*55, 20 + i*55))
 
+
+height = course[y][x]
 
 for i in moves:
     
@@ -104,21 +106,23 @@ for i in moves:
         #         y = (y + 1) % 10
 
 
-    if done:
+    if done or ((x,y) == end):
         break
-    if (i == 'L'):
-        if (x > 0):
+
+    # check heights during traversal  and height + robot_height >= course[x][y]
+    if (i == 'L') :
+        if (x > 0) and height + robot_height >= course[y][x-1] :
             x-=1
     elif (i == 'D'):
-        if (y < map.rows - 1):
+        if (y < map.rows - 1) and height + robot_height >= course[y+1][x]:
             y+=1
     elif (i == 'U'):
-        if (y > 0):
+        if (y > 0) and height + robot_height >= course[y-1][x]:
             y-=1
     elif (i == 'R'):        
-        if (x < map.columns - 1):
+        if (x < map.columns - 1) and height + robot_height >= course[y][x+1]:
             x+=1
-
+    height = course[y][x]
 
     pygame.time.wait(1000)
     # Update the screen

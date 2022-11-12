@@ -44,7 +44,9 @@ class Individual:
         height = course_map.map[x][y]
 
         for m in range(self.num_moves):
-            # print(m, [x, y], end=" ")
+
+
+            # debug(course_map.map[x][y])
             if (self.moves[m] == 'L'):
                 if y > 0 and height + self.robot_height >= course_map.map[x][y-1]:
                     f = f + self.num * \

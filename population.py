@@ -6,7 +6,7 @@ course_map = Path_Map()
 
 
 class Individual:
-    def __init__(self, num_possible_moves, moves=[], robot_height=3):
+    def __init__(self, num_possible_moves, moves=[], robot_height=4):
         self.moves = moves
         self.possible_moves = ['L', 'U', 'R', 'D']
         self.num_moves = len(moves)

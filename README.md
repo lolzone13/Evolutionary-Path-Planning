@@ -8,5 +8,5 @@ Running Tests:
 
 
 ```bash
-python tests.py
+python pygame_visualization.py
 ```
