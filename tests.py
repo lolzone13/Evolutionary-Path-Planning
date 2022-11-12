@@ -9,12 +9,12 @@ from new_population import Individual
 
 
 
-ga = Genetic_Algorithm(10 , 20,  100)
+ga = Genetic_Algorithm(10 , 15,  1000)
 
-
-p = [3, 4, 2, 1, 7, 9]
-# print(ga.roulette_selection(p))
+# moves = ['U', 'R', 'R', 'R', 'R', 'R', 'R', 'D', 'D', 'D', 'R', 'U', 'D', 'R', 'R']
+# print(visualize_map(moves))
+# ind = Individual(15, moves).fitness_function()
+# debug(ind)
 path_string = ga.core_function()
 visualize_map(path_string)
-# print(ind.fitness)
 

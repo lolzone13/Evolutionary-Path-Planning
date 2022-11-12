@@ -117,18 +117,10 @@ class Genetic_Algorithm:
 
 
             # survival of the fittest
-
-            # 
-
             
             total_generation = population_object.population + next_generation
-            # for i in total_generation:
-            #     print(i.fitness, end=" ")
+
             sorted_gen = sorted(total_generation, key = lambda x : -x.fitness)
-            # print()
-            # for i in sorted_gen:
-            #     print(i.fitness, end = " ")
-            # print()
 
             population_object.population = sorted_gen[0:len(next_generation)]
             next_generation = []

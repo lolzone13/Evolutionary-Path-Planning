@@ -11,23 +11,28 @@ def visualize_map(path_string):
     y = loc[1]
     ll[x][y] = '#'
 
-    n = len(path_string)
 
     for i in path_string:
         if (i == 'U'):
-            x-=1
+            if (x > 0):
+                x-=1
         elif (i == 'R'):
-            y+=1
+            if (y < map.columns - 1):
+                y+=1
         elif (i == 'L'):
-            y-=1
+            if (y > 0):
+                y-=1
         elif (i == 'D'):
-            x+=1
+            
+            if (x < map.rows - 1):
+                x+=1
         if ([x, y] == map.end):
             ll[x][y] = 't'
             break
-        ll[x][y] = '#'
+        
     
 
+        ll[x][y] = '#'
     for row in ll:
         st = ""
         print(st.join([str(ele) for ele in row]), end="\n")

@@ -49,71 +49,71 @@ class Individual:
                 if y > 0 and height + self.robot_height >= course_map.map[x][y-1]:
                     f = f + self.num * \
                         (relu(course_map.map[x][y-1] - height)) + \
-                        ((tx-x))**2+ ((ty-y+1))**2
-                    
+                        hard_pen2 * (((tx-x))**2+ ((ty-y+1))**2)
+                    y = y - 1   
                 elif y == 0:
-                    f = hard_pen1
+                    f += hard_pen1
                 elif height + self.robot_height <= course_map.map[x][y-1]:
-                    f = hard_pen2 * \
+                    f += hard_pen2 * \
                         (
                             (relu(height-course_map.map[x][y-1])))**2 + ((tx-x))**2+((ty-y+1))**2
-                y = y - 1
+                # y = y - 1
             elif (self.moves[m] == 'D'):
                 if x < self.max_row and height + self.robot_height >= course_map.map[x+1][y]:
                     f = f + self.num * \
                         (relu(course_map.map[x+1][y] - height)) + \
-                        ((tx-x-1)**2)+((ty-y)**2)
-                    
+                        hard_pen2 * (((tx-x-1)**2)+((ty-y)**2))
+                    x = x + 1
                 elif x == self.max_row:
-                    f = hard_pen1
+                    f += hard_pen1
                 elif height + self.robot_height <= course_map.map[x+1][y]:
-                    f = hard_pen2 * \
+                    f += hard_pen2 * \
                         (
                             (relu(height-course_map.map[x+1][y])))**2 + ((tx-x-1))**2+((ty-y))**2
-                x = x + 1
+                
             elif (self.moves[m] == 'R'):
                 if y < self.max_column and height + self.robot_height >= course_map.map[x][y+1]:
                     f = f + self.num * \
                         (relu(course_map.map[x][y+1] - height)) + \
-                        ((tx-x)**2)+((ty-y-1)**2)
-                    
+                        hard_pen2 * (((tx-x)**2)+((ty-y-1)**2))
+                    y = y + 1
                 elif y == self.max_column:
-                    f = hard_pen1
+                    f += hard_pen1
                 elif height + self.robot_height <= course_map.map[x][y+1]:
-                    f = hard_pen2 * \
+                    f += hard_pen2 * \
                         (
                             (relu(height-course_map.map[x][y+1])))**2 + ((tx-x))**2+((ty-y-1))**2
-                y = y + 1
+                
             elif (self.moves[m] == 'U'):
                 if x > 0 and height + self.robot_height >= course_map.map[x-1][y]:
                     f = f + self.num * \
                         (relu(course_map.map[x-1][y] - height)) + \
-                        ((tx-x+1))**2+((ty-y))**2
-                    
+                        hard_pen2 * (((tx-x+1))**2+((ty-y))**2)
+                    x = x - 1
                 elif x == 0:
-                    f = hard_pen1
+                    f += hard_pen1
                 elif height + self.robot_height <= course_map.map[x-1][y]:
-                    f = hard_pen2 * \
+                    f += hard_pen2 * \
                         (
                             (relu(height-course_map.map[x-1][y])))**2 + ((tx-x+1))**2+((ty-y))**2
-                x = x - 1
+                
             if x == tx and y == ty:  # award the individual that gets to the final point
-                f += 1000
+                f += 10000
     
        
-                # experimental stuff
-                self.fitness = f
-                height = course_map.map[x][y]
+                # # experimental stuff
+                # self.fitness = f
+                # height = course_map.map[x][y]
 
           
                 
             
-            x = x%(self.max_row + 1)
-            y = y%(self.max_column + 1)
+            # x = x%(self.max_row + 1)
+            # y = y%(self.max_column + 1)
             height = course_map.map[x][y]
 
-            
-            # print(f)
+            # debug(m, f)
+    
         self.fitness = f
         # debug(self.moves, self.fitness)
         return f
@@ -149,7 +149,7 @@ class Population:
     def average_fitness(self):
         total_fitness = 0
         for individual in self.population:
-            total_fitness+=individual.fitness
+            total_fitness+=individual.fitness_function()
         avg_fitness = total_fitness / len(self.population)
 
         return avg_fitness 
@@ -158,7 +158,7 @@ class Population:
         fitnesses = []
 
         for i in self.population:
-            fitnesses.append(i.fitness)
+            fitnesses.append(i.fitness_function())
 
         min_fitness = min(fitnesses)
 

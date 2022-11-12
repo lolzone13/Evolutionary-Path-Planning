@@ -16,8 +16,8 @@ class Path_Map:
             [0, 0, 0, 0, 0, 0, 0, 2, 2, 0, ],
         ]
 
-        self.start = [0, 0]
-        self.end = [3, 3]
+        self.start = [4, 4]
+        self.end = [3, 8]
         self.min_path_length = abs(self.start[0] - self.end[0]) + abs(self.start[1] - self.end[1])
         self.rows = rows
         self.columns = cols
