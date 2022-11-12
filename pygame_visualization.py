@@ -20,7 +20,7 @@ map = Path_Map()
 
 
 pygame.init()
-screen = pygame.display.set_mode((800, 700))
+screen = pygame.display.set_mode((700, 600))
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -32,7 +32,7 @@ green = (0, 255, 0)
 orange = (255, 165, 0)
 
 # Create board with gridlines
-board = pygame.Surface((650, 650))
+board = pygame.Surface((550, 550))
 board.fill(dark_grey)
 for i in range(1, 11):
     pygame.draw.rect(board, grey, (0, -7 + i*55, 650, 4))
@@ -58,7 +58,7 @@ clock = pygame.time.Clock()
 screen.fill(black)
 
 font = pygame.font.SysFont("Arial", 30)
-moves = ['R', 'L', 'R', 'U', 'R', 'D', 'U', 'U', 'U', 'D', 'D', 'R', 'R', 'L', 'D']
+moves = path_string
 
 
 def add_numbers():
@@ -71,7 +71,7 @@ def add_numbers():
 
 
 for i in moves:
-
+    
     # Clear the screen   
 
     # Draw board
@@ -104,7 +104,8 @@ for i in moves:
         #         y = (y + 1) % 10
 
 
-
+    if done:
+        break
     if (i == 'L'):
         if (x > 0):
             x-=1
@@ -125,7 +126,7 @@ for i in moves:
     pygame.display.flip()
 
 
-
+done = False
 while not done:
     # Clear the screen
     
