@@ -100,7 +100,7 @@ class Individual:
                             (relu(height-course_map.map[x-1][y])))**2 + ((tx-x+1))**2+((ty-y))**2
                 
             if x == tx and y == ty:  # award the individual that gets to the final point
-                f += 10000
+                f += 10000 * (len(self.moves) - m) # reaching earlier is better
     
        
                 # # experimental stuff

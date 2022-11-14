@@ -52,6 +52,8 @@ pygame.draw.circle(board, orange, (end[0]*55 + 25,end[1]*55 + 25), 25)
 
 
 x, y = start
+
+px, py = start
 done = False
 clock = pygame.time.Clock()
 
@@ -111,7 +113,7 @@ for i in moves:
 
     # check heights during traversal  and height + robot_height >= course[x][y]
     if (i == 'L') :
-        if (x > 0) and height + robot_height >= course[y][x-1] :
+        if (x > 0) and height + robot_height >= course[y][x-1]:
             x-=1
     elif (i == 'D'):
         if (y < map.rows - 1) and height + robot_height >= course[y+1][x]:
@@ -123,6 +125,7 @@ for i in moves:
         if (x < map.columns - 1) and height + robot_height >= course[y][x+1]:
             x+=1
     height = course[y][x]
+
 
     pygame.time.wait(1000)
     # Update the screen
