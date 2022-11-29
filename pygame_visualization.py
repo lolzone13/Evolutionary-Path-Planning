@@ -1,18 +1,20 @@
 
-
-
 import pygame
 from path_map import Path_Map
 from genetic_algorithm import Genetic_Algorithm
+from devtools import debug
 
 
 
 
+ga = Genetic_Algorithm(10 , 15,  2000)
 
-ga = Genetic_Algorithm(10 , 15,  1000)
 
 
 path_string = ga.core_function()
+
+individuals_at_iterations = ga.values_at_iterations
+
 
 
 map = Path_Map()
@@ -74,6 +76,10 @@ def add_numbers():
 
 height = course[y][x]
 
+# for v in individuals_at_iterations:
+#     print("Next Iteration:-- Fitness:", v.fitness_function(), v.moves)
+#     x, y = start
+#     height = course[y][x]
 for i in moves:
     
     # Clear the screen   
@@ -96,17 +102,6 @@ for i in moves:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
                 done = True
-
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_LEFT:
-        #         x = (x - 1) % 10
-        #     if event.key == pygame.K_RIGHT:
-        #         x = (x + 1) % 10
-        #     if event.key == pygame.K_UP:
-        #         y = (y - 1) % 10
-        #     if event.key == pygame.K_DOWN:
-        #         y = (y + 1) % 10
-
 
     if done or ((x,y) == end):
         break
@@ -132,6 +127,24 @@ for i in moves:
     clock.tick()
     pygame.display.flip()
 
+
+# # show the last position
+
+#     screen.blit(board, (105, 20))
+#     # Draw objects
+#     screen.blit(object1, (105 + x*55, 20 + y*55))
+
+#     # img = font.render("2", True, blue)
+#     # screen.blit(img, (105, 20))
+
+#     add_numbers()
+
+#     pygame.time.wait(1000)
+#     # Update the screen
+#     clock.tick()
+#     pygame.display.flip()
+
+#     pygame.time.wait(5000)
 
 done = False
 while not done:

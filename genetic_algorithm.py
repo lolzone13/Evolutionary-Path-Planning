@@ -22,7 +22,7 @@ class Genetic_Algorithm:
         self.iterations = iterations
         self.num_possible_moves = num_possible_moves
         self.population_size = population_size
-
+        self.values_at_iterations = []
     def roulette_selection(self, fitness_values):
         total_fitness = sum(fitness_values)
   
@@ -84,14 +84,15 @@ class Genetic_Algorithm:
 
         
     def adaptive_mutation(self, population, individual, low_mut_prob, high_mut_prob):
-        avg_fitness = population.average_fitness()
-
+        # avg_fitness = population.average_fitness()
+        avg_fitness = population.get_best_individual().fitness
         mutation_probability = high_mut_prob if individual.fitness < avg_fitness else low_mut_prob
 
         return self.mutation(mutation_probability, individual)
 
 
     def core_function(self):
+        tots = []
         population_object = Population(self.population_size, self.num_possible_moves)
 
         population = population_object.get_population()
@@ -108,8 +109,8 @@ class Genetic_Algorithm:
                 (first_child, second_child) = self.crossover(first_parent, second_parent)
                 # debug("Children fitness", first_child.fitness, second_child.fitness)
                 # debug("Children moves ", first_child.moves, second_child.moves)
-                first_child = self.adaptive_mutation(population_object, first_child, 0.8, 0.8)
-                second_child = self.adaptive_mutation(population_object, second_child, 0.8, 0.8)
+                first_child = self.adaptive_mutation(population_object, first_child, 0, 0.8)
+                second_child = self.adaptive_mutation(population_object, second_child, 0, 0.8)
 
 
                 next_generation.append(first_child)
@@ -123,14 +124,21 @@ class Genetic_Algorithm:
             sorted_gen = sorted(total_generation, key = lambda x : -x.fitness)
 
             population_object.population = sorted_gen[0:len(next_generation)]
+            # best_individual = population_object.get_best_individual()
+            # print(best_individual.fitness)
+            print(population_object.average_fitness())
             next_generation = []
+
+            if (generation == 5 or generation == 100 or generation == 200 or generation == 500 or generation == 1000 or generation == 1999):
+                tots.append(population_object.get_best_individual())
 
         print("Final Population")
         population_object.print_population()
 
         print("best individual: ", end="")
         best_individual = population_object.get_best_individual()
-        print(best_individual.moves, best_individual.fitness)
+        print(best_individual.moves, best_individual.fitness_function())
+        self.values_at_iterations = tots
         return best_individual.moves
 
 

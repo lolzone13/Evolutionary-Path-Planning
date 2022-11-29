@@ -106,8 +106,8 @@ class Individual:
                 # # experimental stuff
                 # self.fitness = f
                 # height = course_map.map[x][y]
-
-          
+   
+                # return f
                 
             
             # x = x%(self.max_row + 1)
@@ -186,8 +186,9 @@ class Population:
     
     def get_best_individual(self):
         best_individual = self.population[0]
+        
         for individual in self.population:
-            if individual.fitness > best_individual.fitness:
+            if individual.fitness_function() > best_individual.fitness_function():
                 best_individual = individual
         return best_individual
 
