@@ -65,7 +65,7 @@ class Genetic_Algorithm:
         child2 = Individual(parent2.num_moves,
                             parent2.moves[0:num] + parent1.moves[num:])
         child1.fitness = child1.fitness_function()
-        child2.fitness = child1.fitness_function()
+        child2.fitness = child2.fitness_function()
 
         
         return (child1, child2)

@@ -1,13 +1,13 @@
 
 import pygame
 from path_map import Path_Map
-from genetic_algorithm import Genetic_Algorithm
+from src.genetic_algorithm import GeneticAlgorithm
 from devtools import debug
 
 
 
 
-ga = Genetic_Algorithm(10 , 15,  2000)
+ga = GeneticAlgorithm(10 , 15,  2000)
 
 
 
